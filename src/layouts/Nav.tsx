@@ -26,28 +26,22 @@ const Nav = () => {
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <Link to="#">Item 1</Link>
-            </li>
-            <li>
-              <Link to="#">Item 3</Link>
+              <Link to="#">Books</Link>
             </li>
           </ul>
         </div>
-        <a className="btn btn-ghost">
+        <Link to='/' className="btn btn-ghost">
           <img
             className="object-cover w-10 h-10"
             src="https://i.ibb.co/LQGMn6s/navBook.png"
             alt=""
           />
-        </a>
+        </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <Link to="#">Item 1</Link>
-          </li>
-          <li>
-            <Link to="#">Item 3</Link>
+            <Link to="/books">Books</Link>
           </li>
         </ul>
       </div>
