@@ -1,26 +1,35 @@
-import { useState } from "react";
+// import { useState } from "react";
+import { useParams } from "react-router-dom";
+import {
+  useGetSingelBookQuery,
+} from "../redux/features/book/bookApi";
+import EditModal from "./EditModal";
 
 const BookDetails = () => {
-  const [read, setRead] = useState(false);
+  const { id } = useParams();
+  const { data: book, isLoading, error } = useGetSingelBookQuery(id);
+  const imgUrl = `http://localhost:5000/uploads/${book?.data?.image}`;
+  // const [read, setRead] = useState(false);
+console.log(imgUrl)
+  console.log(isLoading, error);
 
-  const handelRead = () => {
-    setRead(!read);
-  };
+  // const handelRead = () => {
+  //   setRead(!read);
+  // };
+
   return (
     <section>
+      <EditModal id={id} />
       <div className="relative mx-auto max-w-screen-xl px-4 py-8">
         <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-1">
-            <img
-              alt="Les Paul"
-              src="https://i.ibb.co/YBFXCVD/kaligunin-5.jpg"
-            />
+            <img src={imgUrl} />
           </div>
 
           <div className="sticky top-0">
             <div className="mt-8">
               <h1 className="text-xl font-bold sm:text-2xl">
-                সর্বংস্বহা কালীগুনীন
+                {book?.data?.title}
               </h1>
 
               <div className="-ms-0.5 flex">
@@ -37,45 +46,24 @@ const BookDetails = () => {
 
             <div className="mt-4">
               <div className="prose max-w-none">
-                <p>
-                  গুরুভার ডালা খুলে একটা জীর্ণ গুটানো কাগজ বের করে মেলে ধরলো
-                  সামনে। মুখে বললো, "এই ঠাকুরঘর বোধহয় একটা ধোঁকার টাটি মাত্র,
-                  নাহলে উঠানে মন্দির থাকতে কেউ ঘরে একই বিগ্রহ রাখে সচরাচর?"
-                  কাগজের হাতের লেখা অতি প্রাচীন না হলেও অন্ততঃ এক পুরুষ আগের তো
-                  বটেই। ইন্দ্র একবার তোরঙ্গটা দেখে নিয়ে কইলো, "আমি ছেলেবেলায়
-                  এই তোরঙ্গ আমাদের বাড়িতেই দেখেচি।
-                  <button className="font-bold ml-1" onClick={handelRead}>Read More..</button> <br />
-                  {read && (
-                    <>
-                      খুড়ো নিয়ে এসেচিলেন হয়তো। বাবার মুখে শুনেচি, এতে তাঁর
-                      ঠাকুরদার লেখা কিছু একটা রয়েচে, যে জিনিস নাকি যুগযুগান্ত
-                      ধরে বংশ পরম্পরায় আমাদের পরিবারে কয়েক পুরুষ বাদ দিয়ে
-                      দিয়ে নতুন করে লেখা হয়ে আসচে। এতে কি লেখা রয়েচে ঠাকুর?
-                      কালীপদ কাগজটা মেলে ধরলো আমাদের দিকে। হলদে হয়ে আসা কাগজে
-                      ঘন কালো অক্ষরে লেখা রয়েচে একটা হেঁয়ালি ধরণের কিছু -- কে
-                      সবকিছু লয়ে দানিলেন ঘোষে, বুকে তার সুষুপ্ত ধ্বংস সরোষে।
-                      জ্বলে চোখ বিভীষণ, দেখে রবি-চাঁদ, পঞ্চানন মাল্য হতে এক
-                      মুন্ড বাদ, বাকি চার রক্ষা পায় অমরের বনে, অগ্নিদেবের
-                      চরণখানি চলিবে যেই ক্ষণে, চৌকাঠেতে চাবিকাঠি, উদ্ধারিবে তা,
-                      করিবে স্থাপন তারে দেখতে ভালো যা, সে মালার সিংহভাগ আসে
-                      করতলে, অংশগ্রহণ করে ভূমি রসাতলে। পড়া লিখা অক্ষরের কোনো
-                      দাম নাই, কানেতে শুনিবে যাহা সত্য হয় তাই। চতুরঙ্গ শুদ্ধ
-                      কেহ দন্ডাইবে দ্বারে, খুলিবে তবেই বাধা এক ফুৎকারে।
-                    </>
-                  )}
-                </p>
+                <p>{book?.data?.description}</p>
               </div>
               {/* The "Read More" button to navigate to the book details page */}
 
-              <p className="text-sm mb-2">Author: Tony Wayne</p>
-              <p className="text-sm mb-2">Genre: Fiction, Mystery</p>
-              <p className="text-sm mb-2">Publication Date: July 23, 2023</p>
+              <p className="text-sm my-2"><span className="font-semibold">Author:</span> {book?.data?.author}</p>
+              <p className="text-sm mb-2"><span className="font-semibold">Genre:</span> {book?.data?.genre}</p>
+              <p className="text-sm mb-2">
+              <span className="font-semibold">Publication year:</span> {book?.data?.publicationDate}
+              </p>
 
               {/* Reviews section goes here */}
               {/* Add your code to display reviews here */}
 
               <div className="mt-4">
-                <button className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium mr-2">
+                <button
+                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                 onClick={() => (globalThis as any).my_modal_5.showModal()}
+                 className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium mr-2">
                   Edit
                 </button>
                 <button className="px-4 py-2 bg-red-500 text-white rounded-md text-sm font-medium">
