@@ -7,10 +7,22 @@ const bookApi = api.injectEndpoints({
       query: () => "/books",
     }),
     getSearchBooks: builder.query({
-      query: (searchText: string) => `/books?searchTerm=${searchText}`
+      query: (searchText: string) => `/books?searchTerm=${searchText}`,
     }),
-    getFilterBooks: builder.query({
-      query: (queryString) => `/books?${queryString}`
+    getBooksByGenreAndYear: builder.query({
+      query: ({ genre, publicationYear }) => {
+        let query = "/books";
+
+        if (genre && publicationYear) {
+          query += `?genre=${genre}&publicationYear=${publicationYear}`;
+        } else if (genre) {
+          query += `?genre=${genre}`;
+        } else if (publicationYear) {
+          query += `?publicationYear=${publicationYear}`;
+        }
+
+        return query;
+      },
     }),
     getSingelBook: builder.query({
       query: (id) => `/books/${id}`,
@@ -27,6 +39,8 @@ const bookApi = api.injectEndpoints({
 
 export const {
   useGetAllBooksQuery,
+  useGetSearchBooksQuery,
+  useGetBooksByGenreAndYearQuery,
   useGetSingelBookQuery,
   useUpdateBookMutation,
 } = bookApi;
