@@ -5,6 +5,7 @@ import BookDetails from "../components/BookDetails";
 import { createBrowserRouter } from "react-router-dom";
 import SignUp from "../components/SignUp";
 import Login from "../components/Login";
+import NotFound from "../layouts/NotFound"
 
 const routes = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const routes = createBrowserRouter([
   {
     path: "/signUp",
     element: <SignUp />,
+  },
+  {
+    path: "*",
+    element: <NotFound/>,
   },
 ]);
 

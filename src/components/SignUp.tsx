@@ -1,6 +1,52 @@
-import { Link } from "react-router-dom";
+import { useState, FormEvent, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useRegisterMutation } from "../redux/features/auth/authApi";
+import Error from "../Error/Error";
 
 const SignUp = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const [
+    register,
+    { data, isError, isLoading, isSuccess, error: responceError },
+  ] = useRegisterMutation();
+
+
+  useEffect(() => {
+    if (isSuccess == true && data?.success == true) {
+      if (data?.data?.email && data?.data?.password) {
+        navigate("/");
+      }
+    } else {
+      // console.log(responceError?.data)
+      if (isError == true) {
+        setError(responceError?.data?.message);
+      }
+    }
+  }, [data, responceError, navigate, isError, isSuccess]);
+
+  const handelEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handelPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handelSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const option = {
+      email: email,
+      password: password,
+    };
+
+    register(option);
+  };
+
   return (
     <div>
       <div className="navbar bg-base-100">
@@ -18,7 +64,7 @@ const SignUp = () => {
             <h1 className="my-3 text-4xl font-bold">Sign up</h1>
             <p className="text-sm dark:text-gray-400">Create an account</p>
           </div>
-          <form action="" className="space-y-12">
+          <form onSubmit={handelSubmit} action="" className="space-y-12">
             <div className="space-y-4">
               <div>
                 <label className="block mb-2 text-sm">Email address</label>
@@ -26,6 +72,8 @@ const SignUp = () => {
                   type="email"
                   name="email"
                   id="email"
+                  value={email}
+                  onChange={handelEmail}
                   placeholder="leroy@jenkins.com"
                   className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                 />
@@ -39,13 +87,19 @@ const SignUp = () => {
                   name="password"
                   id="password"
                   placeholder="*****"
+                  value={password}
+                  onChange={handelPassword}
                   className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                 />
               </div>
             </div>
             <div className="space-y-2">
               <div>
-                <button type="button" className="w-full btn btn-warning">
+                <button
+                  disabled={isLoading}
+                  type="submit"
+                  className="w-full btn btn-warning"
+                >
                   Sign up
                 </button>
               </div>
@@ -62,6 +116,7 @@ const SignUp = () => {
               </p>
             </div>
           </form>
+          {error !== "" && <Error message={error} />}
         </div>
       </div>
     </div>

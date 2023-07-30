@@ -1,11 +1,54 @@
-import { Link } from "react-router-dom";
+import { useState, FormEvent, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../redux/features/auth/authApi";
+import Error from "../Error/Error";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const [login, { data, isError, isLoading, isSuccess, error: responceError }] =
+    useLoginMutation();
+
+  useEffect(() => {
+    if (isSuccess == true && data?.success == true) {
+      if (data?.data?.email && data?.data?.password) {
+        navigate("/");
+      }
+    } else {
+      // console.log(responceError?.data)
+      if (isError == true) {
+        setError(responceError?.data?.message);
+      }
+    }
+  }, [data, responceError, navigate, isError, isSuccess]);
+
+  const handelEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handelPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handelSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const option = {
+      email: email,
+      password: password,
+    };
+
+    login(option);
+  };
+
   return (
     <div>
       <div className="navbar bg-base-100">
         <Link to="/" className="btn btn-ghost normal-case text-xl">
-        <img
+          <img
             className="object-cover w-10 h-10"
             src="https://i.ibb.co/LQGMn6s/navBook.png"
             alt=""
@@ -21,7 +64,7 @@ const Login = () => {
               Sign in to access your account
             </p>
           </div>
-          <form action="" className="space-y-12">
+          <form onSubmit={handelSubmit} className="space-y-12">
             <div className="space-y-4">
               <div>
                 <label className="block mb-2 text-sm">Email address</label>
@@ -29,6 +72,8 @@ const Login = () => {
                   type="email"
                   name="email"
                   id="email"
+                  value={email}
+                  onChange={handelEmail}
                   placeholder="leroy@jenkins.com"
                   className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                 />
@@ -49,13 +94,19 @@ const Login = () => {
                   name="password"
                   id="password"
                   placeholder="*****"
+                  value={password}
+                  onChange={handelPassword}
                   className="w-full px-3 py-2 border rounded-md dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                 />
               </div>
             </div>
             <div className="space-y-2">
               <div>
-                <button type="button" className="w-full btn btn-warning">
+                <button
+                  disabled={isLoading}
+                  type="submit"
+                  className="w-full btn btn-warning"
+                >
                   Sign in
                 </button>
               </div>
@@ -72,6 +123,7 @@ const Login = () => {
               </p>
             </div>
           </form>
+          {error !== "" && <Error message={error} />}
         </div>
       </div>
     </div>

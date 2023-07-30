@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -16,7 +17,7 @@ const Header = () => {
             we've got something for everyone. Browse our extensive collection
             and immerse yourself in the joy of reading.
           </p>
-          <button className="btn btn-warning">Get Started</button>
+          <Link to='/books' className="btn btn-warning">Get Started</Link>
         </div>
       </div>
     </div>

@@ -1,6 +1,30 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { userLoggedOut } from "../redux/features/auth/authSlice";
 
 const Nav = () => {
+  const [loading, setLoading] = useState(false);
+  const { user } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
+  // console.log(user);
+
+  useEffect(() => {
+    if (user == undefined) {
+      setLoading(false);
+    }
+  }, [user]);
+
+  const handelLogOut = () => {
+    setTimeout(() => {
+      setLoading(true);
+      localStorage.removeItem("auth");
+      dispatch(userLoggedOut());
+      // console.log(user);
+    }, 2000);
+  };
+
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -30,7 +54,7 @@ const Nav = () => {
             </li>
           </ul>
         </div>
-        <Link to='/' className="btn btn-ghost">
+        <Link to="/" className="btn btn-ghost">
           <img
             className="object-cover w-10 h-10"
             src="https://i.ibb.co/LQGMn6s/navBook.png"
@@ -46,9 +70,19 @@ const Nav = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <Link to="/login" className="btn">
-          Login
-        </Link>
+        {user !=undefined ? (
+          <button
+            disabled={loading}
+            onClick={handelLogOut}
+            className="btn"
+          >
+            Log out
+          </button>
+        ) : (
+          <Link to="/login" className="btn">
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );
