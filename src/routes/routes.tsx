@@ -5,7 +5,9 @@ import BookDetails from "../components/BookDetails";
 import { createBrowserRouter } from "react-router-dom";
 import SignUp from "../components/SignUp";
 import Login from "../components/Login";
-import NotFound from "../layouts/NotFound"
+import NotFound from "../layouts/NotFound";
+// import PrivateRoute from "./PrivateRoute";
+import AddBook from "../components/AddBook";
 
 const routes = createBrowserRouter([
   {
@@ -22,7 +24,15 @@ const routes = createBrowserRouter([
       },
       {
         path: "/book-details/:id",
-        element: <BookDetails/>,
+        element: (
+          // <PrivateRoute>
+          // </PrivateRoute>
+            <BookDetails />
+        ),
+      },
+      {
+        path: "/addBook",
+        element: <AddBook/>,
       },
     ],
   },
@@ -36,7 +46,7 @@ const routes = createBrowserRouter([
   },
   {
     path: "*",
-    element: <NotFound/>,
+    element: <NotFound />,
   },
 ]);
 

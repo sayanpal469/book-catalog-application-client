@@ -50,7 +50,10 @@ const Nav = () => {
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <Link to="#">Books</Link>
+              <Link to="/books">Books</Link>
+            </li>
+            <li>
+              <Link to="/addBook">Books</Link>
             </li>
           </ul>
         </div>
@@ -66,6 +69,9 @@ const Nav = () => {
         <ul className="menu menu-horizontal px-1">
           <li>
             <Link to="/books">Books</Link>
+          </li>
+          <li>
+            <Link to="/addBook">Add New</Link>
           </li>
         </ul>
       </div>

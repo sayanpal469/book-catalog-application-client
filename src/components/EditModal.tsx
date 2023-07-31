@@ -12,7 +12,7 @@ const EditModal = ({ id }: IProps) => {
   const [genre, setGenre] = useState("");
   const [publicationDate, setPublicationDate] = useState("");
   const [img, setImg] = useState<File | null>(null);
-  const [updateBook, { isLoading, isSuccess, isError }] =
+  const [updateBook] =
     useUpdateBookMutation();
 
   const handelFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,28 +22,24 @@ const EditModal = ({ id }: IProps) => {
     }
   };
 
-  console.log(isLoading, isSuccess, isError);
+  // console.log(isLoading, isSuccess, isError);
 
   // Function to handle form submission
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Here you can perform actions like sending the data to the server or dispatching an action in Redux, etc.
-    // For this example, we will just log the input values to the console.
-    console.log("Title:", title);
-    console.log("Author:", author);
-    console.log("Genre:", genre);
-    console.log("Image:", img);
-    console.log("Publication Date:", publicationDate);
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("author", author);
+    formData.append("genre", genre);
+    formData.append("publicationYear", publicationDate);
+    if (img) {
+      formData.append("image", img);
+    }
 
     const options = {
       id: id,
-      data: {
-        title: title,
-        author: author,
-        genre: genre,
-        publicationDate: publicationDate,
-        pdf: img?.name,
-      },
+      data: formData,
     };
 
     updateBook(options);

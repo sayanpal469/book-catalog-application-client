@@ -9,7 +9,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const [login, { data, isError, isLoading, isSuccess, error: responceError }] =
+  const [login, { data, isError, isLoading, isSuccess, error: responseError }] =
     useLoginMutation();
 
   useEffect(() => {
@@ -20,10 +20,10 @@ const Login = () => {
     } else {
       // console.log(responceError?.data)
       if (isError == true) {
-        setError(responceError?.data?.message);
+        setError(responseError?.data?.message);
       }
     }
-  }, [data, responceError, navigate, isError, isSuccess]);
+  }, [data, responseError, navigate, isError, isSuccess]);
 
   const handelEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);

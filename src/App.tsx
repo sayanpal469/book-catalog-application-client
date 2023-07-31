@@ -1,9 +1,16 @@
+import useAuthCheck from "./hooks/useAuthCheck";
 import MainLayout from "./layouts/MainLayout";
 
 function App() {
-  return <div>
-    <MainLayout/>
-  </div>;
+  const authChecked = useAuthCheck();
+
+  return !authChecked ? (
+    <div>Checking authicated</div>
+  ) : (
+    <div>
+      <MainLayout />
+    </div>
+  );
 }
 
 export default App;

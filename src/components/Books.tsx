@@ -8,7 +8,9 @@ import {
 } from "../redux/features/book/bookApi";
 
 const Books = () => {
-  const { data: allData, isLoading: isLoadingAllBooks } = useGetAllBooksQuery(undefined);
+  const { data: allData, isLoading: isLoadingAllBooks } = useGetAllBooksQuery(undefined, {
+    refetchOnMountOrArgChange: true
+  });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | "All">("All");
   const [selectedYear, setSelectedYear] = useState<string | "All">("All");

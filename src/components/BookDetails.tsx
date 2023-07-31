@@ -1,22 +1,41 @@
 // import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
+  useDeleteBookMutation,
   useGetSingelBookQuery,
 } from "../redux/features/book/bookApi";
 import EditModal from "./EditModal";
 
 const BookDetails = () => {
   const { id } = useParams();
-  const { data: book, isLoading, error } = useGetSingelBookQuery(id);
+  const { data: book } = useGetSingelBookQuery(id);
+  const [deleteBook, { isLoading, isSuccess, data, error: responseError }] =
+    useDeleteBookMutation();
   const imgUrl = `http://localhost:5000/uploads/${book?.data?.image}`;
-  // const [read, setRead] = useState(false);
-console.log(imgUrl)
-  console.log(isLoading, error);
+  const navigate = useNavigate();
 
-  // const handelRead = () => {
-  //   setRead(!read);
-  // };
+  // console.log(data)
 
+  const handleDelete = async () => {
+    try {
+      // Initiate the deleteBook mutation and await the response
+      const response = await deleteBook(id);
+
+      // Check if the response was successful (status code 200-299)
+      if (isSuccess && response.data?.success === true) {
+        // Book deleted successfully, handle any further actions here.
+        console.log("Book deleted successfully!");
+        alert("Book deleted");
+        navigate("/books"); // Navigate to the "/books" route after successful deletion
+      } else {
+        // Handle any potential errors from the server
+        console.error("Failed to delete the book:", responseError);
+      }
+    } catch (error) {
+      // Handle any other errors, such as network issues
+      console.error("An error occurred while deleting the book:", error);
+    }
+  };
   return (
     <section>
       <EditModal id={id} />
@@ -50,10 +69,17 @@ console.log(imgUrl)
               </div>
               {/* The "Read More" button to navigate to the book details page */}
 
-              <p className="text-sm my-2"><span className="font-semibold">Author:</span> {book?.data?.author}</p>
-              <p className="text-sm mb-2"><span className="font-semibold">Genre:</span> {book?.data?.genre}</p>
+              <p className="text-sm my-2">
+                <span className="font-semibold">Author:</span>{" "}
+                {book?.data?.author}
+              </p>
               <p className="text-sm mb-2">
-              <span className="font-semibold">Publication year:</span> {book?.data?.publicationDate}
+                <span className="font-semibold">Genre:</span>{" "}
+                {book?.data?.genre}
+              </p>
+              <p className="text-sm mb-2">
+                <span className="font-semibold">Publication year:</span>{" "}
+                {book?.data?.publicationDate}
               </p>
 
               {/* Reviews section goes here */}
@@ -61,12 +87,17 @@ console.log(imgUrl)
 
               <div className="mt-4">
                 <button
-                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                 onClick={() => (globalThis as any).my_modal_5.showModal()}
-                 className="px-4 py-2 bg-blue-500 text-white rounded-md text-sm font-medium mr-2">
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  onClick={() => (globalThis as any).my_modal_5.showModal()}
+                  className="btn btn-primary mr-2"
+                >
                   Edit
                 </button>
-                <button className="px-4 py-2 bg-red-500 text-white rounded-md text-sm font-medium">
+                <button
+                  disabled={isLoading}
+                  onClick={handleDelete}
+                  className="btn btn-error"
+                >
                   Delete
                 </button>
               </div>

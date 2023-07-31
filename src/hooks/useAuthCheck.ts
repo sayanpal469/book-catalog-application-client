@@ -12,18 +12,15 @@ const useAuthCheck = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const authDataString  = localStorage.getItem("auth");
-    const authData: IAuthData = authDataString ? JSON.parse(authDataString) : null;
+    const localAuth = localStorage.getItem("auth");
 
-    // console.log(authDataString);
+    if (localAuth) {
+      const authData: IAuthData = localAuth ? JSON.parse(localAuth) : null;
 
-    // const { email, password } = authData;
-
-    if (authData) {
       dispatch(userLoggedIn(authData));
-      setAuthChecked(true);
     }
-  }, [dispatch]);
+    setAuthChecked(true);
+  }, [dispatch, setAuthChecked]);
 
   return authChecked;
 };
