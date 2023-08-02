@@ -1,7 +1,9 @@
+/* eslint-disable no-prototype-builtins */
 import { useState, FormEvent, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../redux/features/auth/authApi";
 import Error from "../Error/Error";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -14,6 +16,11 @@ const SignUp = () => {
     { data, isError, isLoading, isSuccess, error: responceError },
   ] = useRegisterMutation();
 
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   function isFetchBaseQueryError(error: any): error is FetchBaseQueryError {
+    return error && error.hasOwnProperty('data') && typeof error.data === 'object';
+  }
+
 
   useEffect(() => {
     if (isSuccess == true && data?.success == true) {
@@ -22,8 +29,9 @@ const SignUp = () => {
       }
     } else {
       // console.log(responceError?.data)
-      if (isError == true) {
-        setError(responceError?.data?.message);
+      if (isError && isFetchBaseQueryError(responceError)) {
+        const responseData = responceError.data as { message: string };
+        setError(responseData.message);
       }
     }
   }, [data, responceError, navigate, isError, isSuccess]);

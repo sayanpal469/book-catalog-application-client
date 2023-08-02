@@ -11,7 +11,7 @@ const authApi = api.injectEndpoints({
         body: data,
       }),
 
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted({ queryFulfilled, dispatch }) {
         const result = await queryFulfilled;
         dispatch(userLoggedIn(result.data.data));
         const { email, password } = result.data.data;
@@ -26,7 +26,7 @@ const authApi = api.injectEndpoints({
         body: payload,
       }),
 
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted({ queryFulfilled, dispatch }) {
         const result = await queryFulfilled;
         dispatch(userLoggedIn(result.data));
         const { email, password } = result.data.data;

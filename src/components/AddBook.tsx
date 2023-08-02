@@ -8,8 +8,8 @@ const AddBook = () => {
   const [description, setDescription] = useState("");
   const [publicationYear, setPublicationYear] = useState("");
   const [img, setImg] = useState<File | null>(null);
-  const [error, setError] = useState("");
-  const [postBook, { isLoading, isSuccess, error: responseError }] =
+
+  const [postBook, { error: responseError }] =
     usePostBookMutation();
 
   const handelFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +19,7 @@ const AddBook = () => {
     }
   };
 
-  // console.log(responseError?.data?.message)
+  console.log(responseError)
 
   // Function to handle form submission
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -37,10 +37,6 @@ const AddBook = () => {
 
     postBook(formData);
 
-    
-    if (responseError) {
-      setError(responseError?.data?.message)
-    }
   };
 
   return (
@@ -142,7 +138,7 @@ const AddBook = () => {
         </div>
       </form>
 
-      {error !== "" && <Error message={error} />}
+      
     </div>
   );
 };

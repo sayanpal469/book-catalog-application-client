@@ -14,7 +14,7 @@ const BookDetails = () => {
   const imgUrl = `http://localhost:5000/uploads/${book?.data?.image}`;
   const navigate = useNavigate();
 
-  // console.log(data)
+  console.log(data)
 
   const handleDelete = async () => {
     try {

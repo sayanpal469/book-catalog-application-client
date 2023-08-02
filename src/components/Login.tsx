@@ -1,7 +1,9 @@
+/* eslint-disable no-prototype-builtins */
 import { useState, FormEvent, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/features/auth/authApi";
 import Error from "../Error/Error";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +14,12 @@ const Login = () => {
   const [login, { data, isError, isLoading, isSuccess, error: responseError }] =
     useLoginMutation();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function isFetchBaseQueryError(error: any): error is FetchBaseQueryError {
+      return error && error.hasOwnProperty('data') && typeof error.data === 'object';
+    }
+    
+
   useEffect(() => {
     if (isSuccess == true && data?.success == true) {
       if (data?.data?.email && data?.data?.password) {
@@ -19,8 +27,9 @@ const Login = () => {
       }
     } else {
       // console.log(responceError?.data)
-      if (isError == true) {
-        setError(responseError?.data?.message);
+      if (isError && isFetchBaseQueryError(responseError)) {
+        const responseData = responseError.data as { message: string };
+        setError(responseData.message);
       }
     }
   }, [data, responseError, navigate, isError, isSuccess]);
